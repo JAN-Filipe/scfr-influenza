@@ -130,9 +130,9 @@ p2 <- ggplot() +
         legend.position="top")
 #print
 p2
-
-   pdf(paste0(output_dir,"/figure-table_sCFR-IFR_",TODAY,".pdf")); print(p2); dev.off()
-ggsave(paste0(output_dir,"/figure-table_sCFR-IFR_",TODAY,".png"), p2, device = "png")
+figname = paste0("/figure-table_sCFR-IFR") #paste0("/figure-table_sCFR-IFR_",TODAY)
+   pdf(paste0(output_dir,figname,".pdf")); print(p2); dev.off()
+ggsave(paste0(output_dir,figname,".png"), p2, device = "png")
 
 
 
@@ -153,8 +153,9 @@ pp<- ggplot() +
 
 #print
 pp
-   pdf(paste0(output_dir,"/figure_sCFR_pdm09_",TODAY,".pdf")); print(pp); dev.off()
-ggsave(paste0(output_dir,"/figure_sCFR_pdm09_",TODAY,".png"), pp, device = "png")
+figname = paste0("/figure_sCFR_pdm09") #paste0("/figure_sCFR_pdm09_",TODAY)
+   pdf(paste0(output_dir,figname,".pdf")); print(pp); dev.off()
+ggsave(paste0(output_dir,figname,".png"), pp, device = "png")
 
 
 ##summary statistics

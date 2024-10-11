@@ -40,6 +40,8 @@ IFR100k1         <- rep(NA,m)
 
 
 ### IFR seasonal - single study ################################################
+
+
 i=1
 study_i[i]     <- "Kwok 2017"
 strain_i[i]    <- "seasonal"
@@ -64,7 +66,7 @@ IFR100k2[i]  <- IFR100k[i] + qt(.95,ns-1,lower.tail=TRUE)*SE #[1] 62.0224
 
 
 
-##### CFRs #####################################################################
+##### sCFR #####################################################################
 
 
 
@@ -306,7 +308,7 @@ for (it in (1:ns)){
   CIs = pairwiseCI::MOVERR(denom_pt, denom_CIs, numer_pt, numer_CIs, alternative = "two.sided")$conf.int
   CFRs100k_years1[[i]][it]=as.numeric(CIs[1]) #[1]  106.3 266.6 266.4 386.5
   CFRs100k_years2[[i]][it]=as.numeric(CIs[2]) #[1]  246.6 395.9 399.6 554.7
-  print(paste0("i=",it,", ",round(CFRs100k_years1[[i]][it]),",", round(CFRs100k_years[[i]][it]),",",round(CFRs100k_years2[[i]][it])))
+  #print(paste0("i=",it,", ",round(CFRs100k_years1[[i]][it]),",", round(CFRs100k_years[[i]][it]),",",round(CFRs100k_years2[[i]][it])))
 }
 #Overall CFR and UI - derived
 CFRs100k[i]   <- mean(CFRs100k_years[[i]]) #314.9
@@ -362,7 +364,7 @@ CFRs100k_years1[[i]][it]=as.numeric(CIs[1])
 #[1]  65.6  94.2  53.7  71.1 105.1  62.8  78.0  80.8  58.4  33.2  31.2  40.1
 CFRs100k_years2[[i]][it]=as.numeric(CIs[2])
 #[1] 693.5 248.8 346.0 353.2 339.5 158.5 215.5 237.2 347.8 229.7 260.1 318.2
-print(paste0("i=",it,", ",round(CFRs100k_years1[[i]][it],1),",", round(CFRs100k_years[[i]][it],1),",",round(CFRs100k_years2[[i]][it],1)))
+#print(paste0("i=",it,", ",round(CFRs100k_years1[[i]][it],1),",", round(CFRs100k_years[[i]][it],1),",",round(CFRs100k_years2[[i]][it],1)))
 }
 #Overall CFR and UI - derived
 CFRs100k[i]   <- mean(CFRs100k_years[[i]]) #[1] 113.6667
@@ -396,13 +398,14 @@ pdf(file = paste0(output_dir,"/table_sCFR-IFR_av-seasons.pdf"))#,paper="a4r")
 gridExtra::grid.table(dmean, theme = ttheme_default(base_size = 8))
 dev.off()
 pdf(file = paste0(output_dir,"/table_sCFR-IFR_by_season.pdf"))#,paper="a4r") 
-gridExtra::grid.table(dseason, theme = ttheme_default(base_size = 5, padding = unit(c(2, 2), "mm") )) #padding = unit(1, "mm") )
+gridExtra::grid.table(dseason, theme = ttheme_default(base_size = 5, padding = unit(c(2, 2), "mm") ))
 dev.off()
 
 
+
 ###Confidence intervals of ratios
-### (if assumed numerator and denominator variables awere normal with given CI, the ratio would be a Cauchy)
-### Estimationof UIs from the UIs of numerator and denominator:
+### (if assumed numerator and denominator variables were normal with given CI, the ratio would be a Cauchy)
+### Estimation of UIs from the UIs of numerator and denominator:
 ### package: pairwiseCI
 ### pairwiseCI::MOVERR : MOVER-R method by Donner and Zhou (2012). 
 ### Description: Compute confidence intervals for the ratio (theta1/theta0) of two parameters based 

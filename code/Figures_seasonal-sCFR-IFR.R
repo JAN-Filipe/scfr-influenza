@@ -68,13 +68,6 @@ yt_m  <- paste(y_m,  ", ", strrep(" ", (nchar(p[1])-2)), " mean")
 yit   <- paste(yi,   ", ",pi)
 yit_m <- paste(yi_m, ", ", strrep(" ", (nchar(pi[1])-nchar(" mean")))," mean")
 
-#Col 1 - Removing repeated names
-#Saudi Arabia, Norway, Italy, USA
-#=> fails because some dates are the same, duplicating the factor and invalidating the ordering
-#Col 1 - try set order a priori
-#yt <- factor(yt, levels=yt, ordered = T) 
-#=> fails
-
 #### Geography + Period + Seasons_mean + IFR + IFR_mean
 yyy=c(yt,yt_m,yit,yit_m)
 yys = sort(yyy,index=T)
@@ -93,10 +86,13 @@ vvv = c(vv,vv_m,vvi,vvi_m)
 vvs = vvv[iyys]
 
 #### Data frames for figure
-dg  =data.frame(v=v,    v1=v1,    v2=v2,    y=yt,    p=p) #y=y,    p=p)
-dgm =data.frame(v=v_m,  v1=v1_m,  v2=v2_m,  y=yt_m,  p=p_m) #y=y_m,  p=p_m)
+# scfr studies and study-over-season-means, seasonal
+dg  =data.frame(v=v,    v1=v1,    v2=v2,    y=yt,    p=p) 
+dgm =data.frame(v=v_m,  v1=v1_m,  v2=v2_m,  y=yt_m,  p=p_m) 
+# ifr study and study-mean, seasonal
 dgi =data.frame(v=vi,   v1=v1i,   v2=v2i,   y=yit,   p=pi)
 dgim=data.frame(v=vi_m, v1=v1i_m, v2=v2i_m, y=yit_m,p=pi_m)
+# scfr pandemic
 dgp =data.frame(v=vp,   y=yp,  p=pp)
 #### Headers
 #(Zone- needed for ordering: need header to be last in alphabetic order)
@@ -158,7 +154,7 @@ figname = paste0("/figure_sCFR_pdm09") #paste0("/figure_sCFR_pdm09_",TODAY)
 ggsave(paste0(output_dir,figname,".png"), pp, device = "png")
 
 
-##summary statistics
+##### summary statistics
 print(paste0("seasonal range: ",range(dg$v)[1],", ",range(dg$v)[2],", median: ", median(dg$v)))
 #[1] "seasonal range: 0.3, 907.7, median: 124"
 print(paste0("pandemic range: ",range(dgp$v)[1],", ",range(dgp$v)[2],", median: ", median(dgp$v)))
@@ -166,5 +162,17 @@ print(paste0("pandemic range: ",range(dgp$v)[1],", ",range(dgp$v)[2],", median: 
 print(paste0("pandemic (wo outliers 440, 1200) range: ",range(dgp$v[dgp$v<440])[1],", ",range(dgp$v[dgp$v<440])[2],", median: ", median(dgp$v[dgp$v<440])))
 #[1] "pandemic (wo outliers 440, 1200) range: 0, 100, median: 10"
 
-#######################################
+(drange   <- data.frame( scfr_infuenza =c("seasonal", "pandemic 2009", "idem, exc 2 outliers"),
+                         Range_min = round(c(range(dg$v)[1],range(dgp$v)[1], range(dgp$v[dgp$v<440])[1]),1),
+                         Range_max = round(c(range(dg$v)[2],range(dgp$v)[2], range(dgp$v[dgp$v<440])[2]),1),
+                         Q1 = round(c(quantile(dg$v,1/4)[1],quantile(dgp$v,1/4)[1], quantile(dgp$v[dgp$v<440],1/4)[1]),1),
+                         Q3 = round(c(quantile(dg$v,3/4)[1],quantile(dgp$v,3/4)[1], quantile(dgp$v[dgp$v<440],3/4)[1]),1),
+                         Q2 = round(c(quantile(dg$v,2/4)[1],quantile(dgp$v,2/4)[1], quantile(dgp$v[dgp$v<440],2/4)[1]),1))    )
 
+## pdf: data frame
+pdf(file = paste0(output_dir,"/table_sCFR-range_seasonal-and-pdm09.pdf"))#,paper="a4r") 
+gridExtra::grid.table(drange, theme = ttheme_default(base_size = 8))   #padding = unit(c(2, 2), "mm") ))
+dev.off()
+
+
+#######################################

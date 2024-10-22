@@ -80,13 +80,14 @@ seasons[[i]] <- c("2010-2011", "2011-2012", "2012-2013", "2013-2014", "2014-2015
 studies[[i]] <- rep(study[i],length(seasons[[i]]))
 geograp[[i]] <- rep(country[i],length(seasons[[i]]))
 suspec       =  c(37551, 12903, 2743, 1545, 5398, 27097, 26265) #sum(suspected) #[1] 113502
-deaths       =  c(176, 16, 12, 11, 49, 232, 111)                #sum(deaths)    # [1] 607
+deaths       =  c(176, 16, 12, 11, 49, 232, 111)                #sum(deaths)    #[1] 607
 #Annual CFR and UI - derived
 CFRs100k_years[[i]]  = round(10^5*deaths/suspec,1) #[1] 468.7 124.0 437.5 712.0 907.7 856.2 422.6
 CFRs100k_years1[[i]] = rep(NA,length(CFRs100k_years[[i]]))
 CFRs100k_years2[[i]] = rep(NA,length(CFRs100k_years[[i]]))
 #Overall CFR and UI - derived
-CFRs100k[i]   <- mean(CFRs100k_years[[i]]) #561.2429
+CFRs100k[i]   <- round(mean(CFRs100k_years[[i]]),1) #561.2
+#          round(10^5*mean(deaths)/mean(suspec),1)  #534.8
 ns = length(CFRs100k_years[[i]])
 SE = sd(CFRs100k_years[[i]])/sqrt(ns)
 CFRs100k1[i]  <- CFRs100k[i]-qt(.95,ns-1,lower.tail=TRUE)*SE # 357.0
@@ -115,7 +116,7 @@ CFRs100k_years[[i]]  = round(10^5*deaths/sympt,1) #8.5
 CFRs100k_years1[[i]] = rep(NA,length(CFRs100k_years[[i]]))
 CFRs100k_years2[[i]] = rep(NA,length(CFRs100k_years[[i]]))
 #Overall CFR and UI - reported
-CFRs100k[i]  <- 10^5*deaths/sympt #8.507839 
+CFRs100k[i]  <- round(10^5*deaths/sympt,1) #8.5 
 #as reported in text
 CFRs100k[i]  <- 8.5
 CFRs100k1[i] <- NA
@@ -132,8 +133,8 @@ period[i]    <- "2008-2016"
 seasons[[i]] <- c("2008-2009", "2009-2010", "2010-2011", "2011-2012", "2012-2013", "2013-2014", "2014-2015", "2015-2016", "2016-2017")
 studies[[i]] <- rep(study[i],length(seasons[[i]]))
 geograp[[i]] <- rep(country[i],length(seasons[[i]]))
-symp         =  c(68919, 189875, 80072, 76041, 108197, 49510, 91377, 80771, 92462) #mean(symp)      [1] 93024.89
-fatalhosp    =  c(8, 28, 17, 36, 85, 47, 124, 88, 232)                             #mean(fatalhosp) [1] 73.88889
+symp         =  c(68919, 189875, 80072, 76041, 108197, 49510, 91377, 80771, 92462) #mean(symp)      [1] 93024.9
+fatalhosp    =  c(8, 28, 17, 36, 85, 47, 124, 88, 232)                             #mean(fatalhosp) [1] 73.9
 #Annual CFR and UI - derived
 CFRs100k_years[[i]]  = round(10^5*fatalhosp/symp,1) #[1]  11.6  14.7  21.2  47.3  78.6  94.9 135.7 108.9 250.9
 CFRs100k_years1[[i]] = rep(NA,length(CFRs100k_years[[i]]))
@@ -205,7 +206,7 @@ study[i]     <- "McDonald 2023"
 strain[i]    <- "Seasonal A-B"
 country[i]   <- "Netherlands"
 period[i]    <- "2011-2020"  #between A(H1N1)pdm and COVID-19 pandemics
-#aggregated nine seasons, from 2011/2012 to 2019/2020,
+#authors aggregated nine seasons, from 2011/2012 to 2019/2020,
 seasons[[i]] <- c("2011-2020")
 studies[[i]] <- rep(study[i],length(seasons[[i]]))
 geograp[[i]] <- rep(country[i],length(seasons[[i]]))
@@ -258,7 +259,7 @@ studies[[i]] <- rep(study[i],length(seasons[[i]]))
 geograp[[i]] <- rep(country[i],length(seasons[[i]]))
 #aggregated seasons
 symp         = c(591151) #average per season
-deaths       = c(577)   #average per season
+deaths       = c(577)    #average per season
 #Annual CFR and UI - derived
 CFRs100k_years[[i]]  = 10^5*deaths/symp #[1] 97.6
 CFRs100k_years1[[i]] = rep(NA,length(CFRs100k_years[[i]]))
@@ -318,29 +319,17 @@ ns = length(CFRs100k_years[[i]])
 ##
 ##-approach 2 (replaced by approach 1)
 ##-the season-specific UIs depend on the assumption of independence in pairwiseCI::MOVERR 
-library(bootComb)
-combFunEx<-function(pars){ sum=0; for (is in 1:ns){ sum=sum+pars[[is]]}; return(sum/ns)}
-#boot<-bootComb(distributions=rep("normal",ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
-boot<-bootComb(distributions=rep("gamma",ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
-#normal
-#$conf.int
-#lower    upper 
-# 291.9973 363.7809
-#attr(,"credMass") [1] 0.95
-#gamma
-#$conf.int
-#2.5%    97.5% 
-# 287.8936 359.6763
-#attr(,"credMass") [1] 0.95
-CFRs100k1[i] <- as.numeric(boot$conf.int[1]) #287.8936 (gamma), 291.9973 (normal)
-CFRs100k2[i] <- as.numeric(boot$conf.int[2]) #359.6763 (gamma), 363.7809 (normal)
+#library(bootComb)
+#combFunEx<-function(pars){ sum=0; for (is in 1:ns){ sum=sum+pars[[is]]}; return(sum/ns)}
+#boot<-bootComb(distributions=rep("normal",ns),alphaVect=rep(0.05,ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
+#boot<-bootComb(distributions=rep("gamma",ns),alphaVect=rep(0.05,ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
 ##
 ##-approach 1
-##-better approach, based on CLT, and does not depend on the assumption of independence in pairwiseCI::MOVERR 
+##-better approach, based on CLT and does not depend on the assumption of independence in pairwiseCI::MOVERR 
 SE = sd(CFRs100k_years[[i]])/sqrt(ns)
 CFRs100k1[i]  <- CFRs100k[i]-qt(.95,ns-1,lower.tail=TRUE)*SE #[1] 168.2
 CFRs100k2[i]  <- CFRs100k[i]+qt(.95,ns-1,lower.tail=TRUE)*SE #[1] 461.5
-##
+
 
 
 
@@ -400,31 +389,17 @@ ns = length(CFRs100k_years[[i]])
 ##
 ##-approach 2 (replaced by approach 1)
 ##-the season-specific UIs depend on the assumption of independence in pairwiseCI::MOVERR 
-library(bootComb)
-combFunEx<-function(pars){ sum=0; for (is in 1:ns){ sum=sum+pars[[is]]}; return(sum/ns)}
-alphaVect=rep(0.05,ns)
-boot<-bootComb(distributions=rep("normal",ns),alphaVect=alphaVect,qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
-#boot<-bootComb(distributions=rep("gamma", ns),alphaVect=alphaVect,qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
-boot$conf.int
-#normal
-#lower    upper 
-#147.7733 228.8239
-#attr(,"credMass") [1] 0.95
-#gamma
-#lower    upper 
-#123.5943 205.1870 
-#attr(,"credMass") [1] 0.95
-CFRs100k1[i] <- as.numeric(boot$conf.int[1]) #123.5943 (gamma), 147.7733 (normal)
-CFRs100k2[i] <- as.numeric(boot$conf.int[2]) #205.1870 (gamma), 228.8239 (normal)
-#=> excludes the mean; probably due to the assumption of independence when estimating season-specific
-#=> best to use Students' t
+#library(bootComb)
+#combFunEx<-function(pars){ sum=0; for (is in 1:ns){ sum=sum+pars[[is]]}; return(sum/ns)}
+#boot<-bootComb(distributions=rep("normal",ns),alphaVect=rep(0.05,ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
+#boot<-bootComb(distributions=rep("gamma", ns),alphaVect=rep(0.05,ns),qLowVect=CFRs100k_years1[[i]][],qUppVect=CFRs100k_years2[[i]][],combFun=combFunEx,method="hdi",seed=123,N=1e6)
 ##
 ##-approach 1
-##-better approach, based on CLT, and does not depend on the assumption of independence in pairwiseCI::MOVERR 
+##-better approach, based on CLT and does not depend on the assumption of independence in pairwiseCI::MOVERR 
 SE = sd(CFRs100k_years[[i]])/sqrt(ns)
 CFRs100k1[i]  <- CFRs100k[i] - qt(.95,ns-1,lower.tail=TRUE)*SE #[1] 93.98868
 CFRs100k2[i]  <- CFRs100k[i] + qt(.95,ns-1,lower.tail=TRUE)*SE #[1] 133.3447
-##
+
 
 
 
@@ -456,12 +431,10 @@ dev.off()
 
 
 
-###Confidence intervals of ratios
-### (if assumed numerator and denominator variables were normal with given CI, the ratio would be a Cauchy)
-### Estimation of UIs from the UIs of numerator and denominator:
+###Estimation of UIs of ratios from the UIs of numerator and denominator:
 ### package: pairwiseCI
 ### pairwiseCI::MOVERR : MOVER-R method by Donner and Zhou (2012). 
 ### Description: Compute confidence intervals for the ratio (theta1/theta0) of two parameters based 
 ### on point estimates and confidence intervals for the two parameters, theta1 and theta0.
-### Also assume independence of theta1 and theta0.
+### Assume independence of theta1 and theta0.
 

@@ -196,10 +196,11 @@ p2 <- ggplot() +
 p2
 ##pdf, png
    figname = paste0("/figure-table_sCFR-IFR_SE_",TODAY)
-   pdf(paste0(output_dir,figname,".pdf")); print(p2); dev.off()
+   pdf(paste0(output_dir,figname,".pdf")); 
+     print(p2); 
+   dev.off()
    #ggsave(paste0(output_dir,figname,".png"), p2, device = "png")
 
-dev.off()
 
 
 
@@ -270,8 +271,10 @@ pp<- ggplot() +
 ##print
 pp
 ##pdf, png
-figname = paste0("/figure_sCFR_pdm09_",TODAY) #paste0("/figure_sCFR_pdm09_",TODAY)
-   pdf(paste0(output_dir,figname,".pdf")); print(pp); dev.off()
+figname = paste0("/figure_sCFR_pdm09_",TODAY)
+   pdf(paste0(output_dir,figname,".pdf")); 
+     print(pp); 
+   dev.off()
    #ggsave(paste0(output_dir,figname,".png"), pp, device = "png")
 
 
@@ -295,7 +298,7 @@ print(paste0("pandemic (wo outliers 440, 1200) range: ",range(dgp$v[dgp$v<440])[
 
 ##pdf
   pdf(file = paste0(output_dir,"/table_sCFR-range_seasonal-and-pdm09_",TODAY,".pdf"))#,paper="a4r") 
-  gridExtra::grid.table(drange, theme = ttheme_default(base_size = 8))   #padding = unit(c(2, 2), "mm") ))
+    gridExtra::grid.table(drange, theme = ttheme_default(base_size = 8))   #padding = unit(c(2, 2), "mm") ))
   dev.off()
 
 

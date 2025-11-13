@@ -1,6 +1,10 @@
 # A systematised review of seasonal influenza case-fatality risk
-Here is code and data supporting the article available at [https://doi.org/](https://www.medrxiv.org/content/10.1101/2024.10.22.24315943v2)
-The article is a literature review of symptomatic-case fatality risk (sCFR) for seasonal influenza. The studies identified in this review were published between 2009 and 2024.
+
+Literature review of symptomatic-case fatality risk (sCFR) for seasonal influenza. 
+This article reviews studies published between 2009 and 2024.
+Here is the code and data supporting the article.
+Current version: https://www.medrxiv.org/content/10.1101/2024.10.22.24315943v2 (pre-print)
+
 
 | Folder    | Function  |
 | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -19,6 +19,6 @@ cat("Gathering data and tables...\n")
 source(file = paste0(source_dir,"/Data-analysis_seasonal-sCFR-IFR.r"))
 
 cat("Making figures...\n")
-source(file = paste0(source_dir,"/Figures_seasonal-sCFR-IFR.r"))
+source(file = paste0(source_dir,"/Figures_seasonal-sCFR-IFR_SE.R"))
 
 ################################################################################

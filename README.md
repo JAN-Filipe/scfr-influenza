@@ -6,7 +6,7 @@ Here is the code and data supporting the article.
 Current version: https://www.medrxiv.org/content/10.1101/2024.10.22.24315943v2 (pre-print)
 
 
-| Folder    | Function  |
+| Folder        | Function  |
 | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------- |
 |  /code/       | R file containing and analysing primary data extracted from literature; outputs summary tables of sCFR:
 |               |    1) averaged over seasons,
